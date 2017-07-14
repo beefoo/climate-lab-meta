@@ -1,0 +1,4 @@
+data/instructions.json
+*.mp4
+frames/*
+mask/*
