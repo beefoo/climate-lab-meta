@@ -21,6 +21,9 @@ float fadeMsOffsetMin = 4000;
 float fadeMsOffsetMax = 24000;
 float frameMs;
 
+float fadeMs = fadeMsOffsetMax-fadeMsOffsetMin;
+float fadeGroupMs = fadeMs / gridW;
+
 void setup() {
   size(3686, 922);
   frameRate(fps);
@@ -54,9 +57,13 @@ void draw() {
       float gh = halton(loc, 13);
       float gh2 = halton(loc, 5);
       
+      int group = gridW - 1 - x;
+      float offset0 = group * fadeGroupMs + fadeMsOffsetMin;
+      float offset1 = (group+1) * fadeGroupMs + fadeMsOffsetMin;
+      
       float fadeProgress = 0.0;
-      float fadeOffset = lerp(fadeMsOffsetMin, fadeMsOffsetMax, gh2);
-      fadeOffset = fadeOffset * (float(gridW-x) / gridW);
+      float fadeOffset = lerp(offset0, offset1, gh2);
+      //fadeOffset = fadeOffset * (float(gridW-x) / gridW);
       if (elapsedMs > fadeOffset) {
         float fadeDuration = lerp(fadeMsMin, fadeMsMax, gh);
         fadeProgress = (elapsedMs - fadeOffset) / fadeDuration;
