@@ -21,6 +21,7 @@ FPS = 30
 DURATION = 60
 FRAMES = DURATION * FPS
 FADE_DURATION = [1.0, 2.0]
+RANGE = [54, 59]
 
 # 20the century average temperature in °C
 # https://www.ncdc.noaa.gov/sotc/global/201613
@@ -52,17 +53,28 @@ maxValue = max(values)
 count = len(values)
 yearDuration = (1.0 * DURATION - FADE_DURATION[1]) / count
 
+runningMax = -999
 for i,d in enumerate(data):
     data[i]["start"] = int(i * yearDuration * 1000)
-    dur = lerp(FADE_DURATION[0], FADE_DURATION[1], random.random())
+    # dur = lerp(FADE_DURATION[0], FADE_DURATION[1], random.random())
+    dur = FADE_DURATION[0]
     data[i]["end"] = data[i]["start"] + int(dur * 1000)
     data[i]["norm"] = norm(d["value"], minValue, maxValue)
-    data[i]["label"] = str(round((d["value"] + BASELINE) * 9.0 / 5.0 + 32.0, 1)) + "°F"
+    v = (d["value"] + BASELINE) * 9.0 / 5.0 + 32.0
+    data[i]["label"] = str(round(v, 1)) + "°F"
+
+    data[i]["height"] = norm(v, RANGE[0], RANGE[1])
+    data[i]["record"] = 0
+    if d["year"] > 1880 and d["value"] > runningMax:
+        data[i]["record"] = 1
+    if d["value"] > runningMax:
+        runningMax = d["value"]
 
 jsonOut = {
     "data": data,
     "duration": data[-1]["end"],
-    "count": count
+    "count": count,
+    "range": RANGE
 }
 
 with open(args.OUTPUT_FILE, 'w') as f:
