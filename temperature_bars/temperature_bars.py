@@ -22,6 +22,8 @@ DURATION = 60
 FRAMES = DURATION * FPS
 FADE_DURATION = [1.0, 2.0]
 RANGE = [54, 59]
+COLDEST_COUNT = 10
+HOTTEST_COUNT = 17
 
 # 20the century average temperature in °C
 # https://www.ncdc.noaa.gov/sotc/global/201613
@@ -52,6 +54,7 @@ minValue = min(values)
 maxValue = max(values)
 count = len(values)
 yearDuration = (1.0 * DURATION - FADE_DURATION[1]) / count
+startYear = data[0]["year"]
 
 runningMax = -999
 for i,d in enumerate(data):
@@ -65,10 +68,28 @@ for i,d in enumerate(data):
 
     data[i]["height"] = norm(v, RANGE[0], RANGE[1])
     data[i]["record"] = 0
-    if d["year"] > 1880 and d["value"] > runningMax:
+    if d["year"] > 1930 and d["value"] > runningMax:
         data[i]["record"] = 1
     if d["value"] > runningMax:
         runningMax = d["value"]
+
+# add the 10 coldest
+dataByValue = sorted(data, key=lambda k: k["value"])
+for i,d in enumerate(dataByValue):
+    j = d["year"] - startYear
+    if i < COLDEST_COUNT:
+        data[j]["coldest"] = 1
+    else:
+        data[j]["coldest"] = 0
+
+# add the 17 hottest
+dataByValue = sorted(data, key=lambda k: k["value"], reverse=True)
+for i,d in enumerate(dataByValue):
+    j = d["year"] - startYear
+    if i < HOTTEST_COUNT:
+        data[j]["hottest"] = 1
+    else:
+        data[j]["hottest"] = 0
 
 jsonOut = {
     "data": data,

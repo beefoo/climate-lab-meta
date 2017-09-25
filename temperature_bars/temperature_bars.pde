@@ -31,7 +31,7 @@ PGraphics dg;
 PGraphics hg;
 PGraphics tg;
 PGraphics ag;
-
+PGraphics cg;
 
 float textPositionY = 0.68;
 float border = 0.6844;
@@ -47,8 +47,8 @@ PGraphics gg;
 int gradientHeight = 0;
 
 void setup() {
-  size(3686, 922);
-  //size(1843, 461);
+  size(3686, 922, P2D);
+  // size(1843, 461, P2D);
   frameRate(fps);
 
   JSONObject json = loadJSONObject(dataFile);
@@ -71,6 +71,7 @@ void setup() {
   hg = createGraphics(width, height);
   tg = createGraphics(width, height);
   ag = createGraphics(width, height);
+  cg = createGraphics(width, height);
   
   // make gradient
   gradientHeight = int(0.05 * height);
@@ -110,13 +111,28 @@ void draw() {
   ag.noStroke();
   ag.smooth();
   
+  //cg.beginDraw();
+  //cg.clear();
+  //cg.noStroke();
+  //cg.smooth();
+  //cg.tint(255, 60);
+  
   int latest = 0;
+  
+  int latestI = floor(elapsedMs / totalMs * (jsonData.size()-1)) + 1;
+  latestI = min(latestI, jsonData.size()-1);
+  JSONObject latestYearObj = jsonData.getJSONObject(latestI);
+  int latestYear = latestYearObj.getInt("year");
+  
+  JSONObject coldestYearDisplay = jsonData.getJSONObject(1930-jsonData.getJSONObject(0).getInt("year"));
+  JSONObject hottestYearDisplay = jsonData.getJSONObject(2000-jsonData.getJSONObject(0).getInt("year"));
 
   for (int i=0; i<jsonData.size(); i++) {
     JSONObject d = jsonData.getJSONObject(i);
     
     float start = d.getFloat("start");
     float end = d.getFloat("end");
+    int year = d.getInt("year");
     
     if (elapsedMs >= start) {
       float n = norm(elapsedMs, start, end);
@@ -155,42 +171,81 @@ void draw() {
 
       dg.noStroke();
       
-      int record = d.getInt("record");
-      if (record > 0) {
+      //int record = d.getInt("record");
+      //if (record > 0) {
         
-        // draw ghost highlight
-        float hn = min(n * 2, 1);
-        float hw = lerp(barWidth, barWidth*scaleHighlight, hn);
-        float hh = lerp(barHeight, barHeight*scaleHighlight, hn);
-        float hx = x - (hw - barWidth) * 0.5;
-        float hy = y - (hh - barHeight) * 0.5;
+      //  // draw ghost highlight
+      //  float hn = min(n * 2, 1);
+      //  float hw = lerp(barWidth, barWidth*scaleHighlight, hn);
+      //  float hh = lerp(barHeight, barHeight*scaleHighlight, hn);
+      //  float hx = x - (hw - barWidth) * 0.5;
+      //  float hy = y - (hh - barHeight) * 0.5;
         
-        hg.noFill();
-        hg.strokeWeight(2);
-        hg.stroke(#ffffff, (1.0-hn)*255);
-        hg.rect(hx+2, hy, hw-4, hh);
+      //  hg.noFill();
+      //  hg.strokeWeight(2);
+      //  hg.stroke(#ffffff, (1.0-hn)*255);
+      //  hg.rect(hx+2, hy, hw-4, hh);
         
-        hg.noStroke();
-        hg.fill(#ffffff, (1.0-nn)*255);
-        hg.textAlign(CENTER, BOTTOM);
-        hg.textSize(20);
-        hg.text("Record", hx + hw * 0.5, y - height*0.02);
+      //  hg.noStroke();
+      //  hg.fill(#ffffff, (1.0-nn)*255);
+      //  hg.textAlign(CENTER, BOTTOM);
+      //  hg.textSize(20);
+      //  hg.text("Record", hx + hw * 0.5, y - height*0.02);
         
-        color rc = lerpColor(#ffffff, #dddddd, min(n * 2, 1));
+      //  color rc = lerpColor(#ffffff, #ffe8e8, min(n * 2, 1));
+      //  dg.stroke(rc);
+      //  dg.strokeWeight(2);
+      //}
+      
+      float bw = barWidth;
+      float bh = barHeight;
+      float bx = x;
+      float by = y;
+      
+      int hottest = d.getInt("hottest");
+      
+      if (latestYear >= hottestYearDisplay.getInt("year") && hottest > 0) {
+        color rc = #fff2f2;
+        float _a = norm(elapsedMs, hottestYearDisplay.getFloat("start"), hottestYearDisplay.getFloat("end"));
+        _a = min(_a, 1);
+        rc = lerpColor(c, rc, _a);
         dg.stroke(rc);
-        dg.strokeWeight(2);
+        dg.strokeWeight(3);
+        bw -= 4;
+        bx += 2;
+        //cg.stroke(rc);
+        //cg.strokeWeight(2);
+        //cg.fill(c, alpha*255);
+        //cg.rect(x, y, barWidth, barHeight);
+      }
+      
+      int coldest = d.getInt("coldest");
+      
+      if (latestYear >= coldestYearDisplay.getInt("year") && coldest > 0) {
+        color rc = #f4fbff;
+        float _a = norm(elapsedMs, coldestYearDisplay.getFloat("start"), coldestYearDisplay.getFloat("end"));
+        _a = min(_a, 1);
+        rc = lerpColor(c, rc, _a);
+        dg.stroke(rc);
+        dg.strokeWeight(3);
+        bw -= 4;
+        bx += 2;
+        //cg.stroke(rc);
+        //cg.strokeWeight(2);
+        //cg.fill(c, alpha*255);
+        //cg.rect(x, y, barWidth, barHeight);
       }
       
       dg.fill(c, alpha*255);
-      dg.rect(x, y, barWidth, barHeight);
+      dg.rect(bx, by, bw, bh);
       
-      int year = d.getInt("year");
+      
       if (year % 10 == 0) {
         float tx = 1.0 * i * cellWidth + 0.5 * cellWidth + marginX;
         float ty = textPositionY * height;
         tg.fill(#ffffff, n*255);
         tg.textAlign(CENTER, BOTTOM);
-        tg.textSize(20);
+        tg.textSize(24);
         tg.text(year, tx, ty);
       }
       
@@ -205,7 +260,7 @@ void draw() {
   ag.stroke(#444444);
   ag.strokeWeight(2);
   ag.textAlign(LEFT, BOTTOM);
-  ag.textSize(16);
+  ag.textSize(24);
   
   for (int i = rangeMin+1; i < rangeMax; i++) {
     float y = 1.0 - norm(i*1.0, rangeMin*1.0, rangeMax*1.0);
@@ -226,7 +281,7 @@ void draw() {
         
         if (year % 40 == 0) {
           float tx = 1.0 * j * cellWidth + marginX;
-          ag.fill(#999999, n*255);
+          ag.fill(#DDDDDD, n*255);
           ag.text(i+"°F", tx, y - height * 0.01);
         }
       }
@@ -235,18 +290,23 @@ void draw() {
   }
   
   
-  //hg.filter(BLUR, 4);
+  //cg.filter(BLUR, 4);
+  
   dg.endDraw();
   hg.endDraw();
   tg.endDraw();
   ag.endDraw();
+  //cg.endDraw();
   
   int gy = height - gradientHeight - int(height - border*height);
+  
   image(ag, 0, 0);
   image(dg, 0, 0);
   image(hg, 0, 0);
   image(gg, 0, gy);
   image(tg, 0, 0);
+  //image(cg, 0, 0);
+  
   
   fill(bgColor);
   noStroke();

@@ -20,9 +20,9 @@ Table data;
 String year;
 
 void setup() {
-  //size(3686, 922, P2D);
+  size(3686, 922, P2D);
   //size(1843, 461, P2D);
-  size(1920, 480, P2D);
+  //size(1920, 480, P2D);
   frameRate(fps);
   smooth();
   noStroke();
@@ -30,7 +30,7 @@ void setup() {
   colorMode(HSB, 1.0);
    
   float psWidth = width;
-  float psHeight = height * 0.75;
+  float psHeight = height * 0.6855;
   float psX = 0.0;
   float psY = 0.0;
   
@@ -73,10 +73,10 @@ void draw() {
   text(year, width / 9.0 + width / 18.0, height * 0.75 * 0.5);
   text(year, width - width / 9.0 - width / 18.0, height * 0.75 * 0.5);
   
-  fill(#ffca59);
-  text("Fossil fuel carbon emissions", width / 2.0, height * 0.75 * 0.5 - height * 0.04);
-  textSize(width / 80.0);
-  text("Millions of metric tons of carbon", width / 2.0, height * 0.75 * 0.5 + height * 0.04);
+  //fill(#ffca59);
+  //text("Fossil fuel carbon emissions", width / 2.0, height * 0.75 * 0.5 - height * 0.04);
+  //textSize(width / 80.0);
+  //text("Millions of metric tons of carbon", width / 2.0, height * 0.75 * 0.5 + height * 0.04);
   
   if (captureFrames) {
     saveFrame(outputMovieFile); 
@@ -140,6 +140,7 @@ class Particle {
   float radius;
   float life;
   color pColor;
+  int maxAlpha;
 
   Particle(float _x, float _y, float _w, float _h, float rad, color _c) {
     radius = rad;
@@ -149,6 +150,7 @@ class Particle {
     h = _h;
     life = 0;
     pColor = _c;
+    maxAlpha = 225;
     
     float v = 1.0;
     float rw = w * 0.9;
@@ -213,7 +215,7 @@ class Particle {
     velocity.y *= acceleration.y;
     velocity.z *= acceleration.z;
     
-    if (life < 255) {
+    if (life < maxAlpha) {
       life += 0.01; 
     }
   }
