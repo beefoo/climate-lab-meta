@@ -12,13 +12,19 @@ float elapsedMs = 0;
 float totalMs = 60000;
 float frameMs;
 
-float rotation = -180;
-float rotationStep = 0.01;
-float rotateUp = -25;
+// asia
+float rotationXStart = -180;
+float rotationYStart = -25;
+float fovStart = PI/20.0;
 
+// to u.s.
+float rotationXEnd = -110;
+float rotationYEnd = -90;
+float fovEnd = PI/22.0;
+
+float rotationStep;
 float xOffset;
 float sphereRadius;
-float fov;
 float aspectRatio;
 float orbitRadius;
 
@@ -50,9 +56,9 @@ void setup() {
   
   orbitRadius = height * 0.1;
   sphereRadius = orbitRadius * 0.5;
-  fov = PI/12.0; 
   aspectRatio = (1.0 * width) / (1.0 * height);
-  xOffset = - width * 0.2;
+  //xOffset = - width * 0.2;
+  xOffset = 0;
   
   frameMs = (1.0/float(fps)) * 1000;
   
@@ -62,14 +68,19 @@ void setup() {
 void draw() {
   background(0);
   
+  float progress = elapsedMs / totalMs;
+  float rotationY = lerp(rotationYStart, rotationYEnd, progress);
+  float rotationX = lerp(rotationXStart, rotationXEnd, progress);
+  float fov = lerp(fovStart, fovEnd, progress);
+  
   //print("x: "+mouseX+" y: "+mouseY, 10, 15);
   pg.beginDraw();
   pg.background(0);
   pg.noStroke();
   
-  float cy = sin(radians(rotateUp))*orbitRadius;
-  float cx = cos(radians(rotation))*orbitRadius;
-  float cz = sin(radians(rotation))*orbitRadius;
+  float cy = sin(radians(rotationY))*orbitRadius;
+  float cx = cos(radians(rotationX))*orbitRadius;
+  float cz = sin(radians(rotationX))*orbitRadius;
   
   pg.perspective(fov, aspectRatio, orbitRadius/10.0, orbitRadius*10.0);
   
@@ -85,8 +96,6 @@ void draw() {
 
   pg.endDraw();
   image(pg, xOffset, 0);
-  
-  rotation += rotationStep;
   
   if (captureFrames) {
     saveFrame(outputMovieFile); 
