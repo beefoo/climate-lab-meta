@@ -8,9 +8,9 @@ String outputMovieFile = "frames/frames-#####.png";
 int fps = 30;
 
 float elapsedMs = 0;
-float totalMs = 60000;
+float totalMs = 30000;
 float emissionMsStart = 0;
-float emissionMsEnd = 40000;
+float emissionMsEnd = 25000;
 float frameMs;
 
 ParticleSystem ps;
@@ -30,7 +30,7 @@ void setup() {
   colorMode(HSB, 1.0);
    
   float psWidth = width;
-  float psHeight = height * 0.6855;
+  float psHeight = height * 0.75;
   float psX = 0.0;
   float psY = 0.0;
   
@@ -69,9 +69,9 @@ void draw() {
   
   fill(#ffca59);
   textAlign(CENTER, CENTER);
-  textSize(width / 60.0);
-  text(year, width / 9.0 + width / 18.0, height * 0.75 * 0.5);
-  text(year, width - width / 9.0 - width / 18.0, height * 0.75 * 0.5);
+  textSize(width / 75.0);
+  text(year, width / 9.0 - width / 18.0, height * (5.0/8.0));
+  text(year, width - width / 9.0 + width / 18.0, height * (5.0/8.0));
   
   //fill(#ffca59);
   //text("Fossil fuel carbon emissions", width / 2.0, height * 0.75 * 0.5 - height * 0.04);
@@ -140,7 +140,7 @@ class Particle {
   float radius;
   float life;
   color pColor;
-  int maxAlpha;
+  float maxAlpha;
 
   Particle(float _x, float _y, float _w, float _h, float rad, color _c) {
     radius = rad;
@@ -150,13 +150,14 @@ class Particle {
     h = _h;
     life = 0;
     pColor = _c;
-    maxAlpha = 225;
+    maxAlpha = 0.5;
     
     float v = 1.0;
-    float rw = w * 0.9;
+    float rw = w * 0.95;
+    float rh = h * 0.95;
     
-    position = new PVector(x+w*0.5+random(-rw/2,rw/2), y+h, (radius/2) * random(0,1) + radius/2);
-    velocity = new PVector(random(-v,v), random(-v, 0), random(-radius/100,radius/100));
+    position = new PVector(x+w*0.5+random(-rw/2,rw/2), y+h*0.5+random(-rh/2,rh/2), (radius/2) * random(0,1) + radius/2);
+    velocity = new PVector(random(-v,v), random(-v, v), random(-radius/100,radius/100));
     acceleration = new PVector(0.9995, 0.9995, 0.9995);
   }
 
