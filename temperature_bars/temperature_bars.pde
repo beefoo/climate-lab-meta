@@ -20,9 +20,9 @@ float cellWidth = 0;
 
 PImage light;
 
-color[] gradient = {#4a7ba5, #b466d6, #ff3a3a};
+color[] gradient = {#99cccc, #a07a6d, #ff3300};
 
-color bgColor = #231f20;
+color bgColor = #000000;
 color lightColor = #fce4ff;
 float highlightOffset = 0.4;
 float barWidthResize = 0.9;
@@ -47,7 +47,8 @@ PGraphics gg;
 int gradientHeight = 0;
 
 void setup() {
-  size(3686, 922, P2D);
+  size(8640, 2160, P2D);
+  //size(3686, 922, P2D);
   // size(1843, 461, P2D);
   frameRate(fps);
 
@@ -85,6 +86,10 @@ void setup() {
     gg.line(0, i, width, i);
   }
   gg.endDraw();
+  
+  elapsedMs = totalMs;
+  
+  noLoop();
   
 }
 
@@ -204,37 +209,37 @@ void draw() {
       
       int hottest = d.getInt("hottest");
       
-      if (latestYear >= hottestYearDisplay.getInt("year") && hottest > 0) {
-        color rc = #fff2f2;
-        float _a = norm(elapsedMs, hottestYearDisplay.getFloat("start"), hottestYearDisplay.getFloat("end"));
-        _a = min(_a, 1);
-        rc = lerpColor(c, rc, _a);
-        dg.stroke(rc);
-        dg.strokeWeight(3);
-        bw -= 4;
-        bx += 2;
-        //cg.stroke(rc);
-        //cg.strokeWeight(2);
-        //cg.fill(c, alpha*255);
-        //cg.rect(x, y, barWidth, barHeight);
-      }
+      //if (latestYear >= hottestYearDisplay.getInt("year") && hottest > 0) {
+      //  color rc = #fff2f2;
+      //  float _a = norm(elapsedMs, hottestYearDisplay.getFloat("start"), hottestYearDisplay.getFloat("end"));
+      //  _a = min(_a, 1);
+      //  rc = lerpColor(c, rc, _a);
+      //  dg.stroke(rc);
+      //  dg.strokeWeight(3);
+      //  bw -= 4;
+      //  bx += 2;
+      //  //cg.stroke(rc);
+      //  //cg.strokeWeight(2);
+      //  //cg.fill(c, alpha*255);
+      //  //cg.rect(x, y, barWidth, barHeight);
+      //}
       
       int coldest = d.getInt("coldest");
       
-      if (latestYear >= coldestYearDisplay.getInt("year") && coldest > 0) {
-        color rc = #f4fbff;
-        float _a = norm(elapsedMs, coldestYearDisplay.getFloat("start"), coldestYearDisplay.getFloat("end"));
-        _a = min(_a, 1);
-        rc = lerpColor(c, rc, _a);
-        dg.stroke(rc);
-        dg.strokeWeight(3);
-        bw -= 4;
-        bx += 2;
-        //cg.stroke(rc);
-        //cg.strokeWeight(2);
-        //cg.fill(c, alpha*255);
-        //cg.rect(x, y, barWidth, barHeight);
-      }
+      //if (latestYear >= coldestYearDisplay.getInt("year") && coldest > 0) {
+      //  color rc = #f4fbff;
+      //  float _a = norm(elapsedMs, coldestYearDisplay.getFloat("start"), coldestYearDisplay.getFloat("end"));
+      //  _a = min(_a, 1);
+      //  rc = lerpColor(c, rc, _a);
+      //  dg.stroke(rc);
+      //  dg.strokeWeight(3);
+      //  bw -= 4;
+      //  bx += 2;
+      //  //cg.stroke(rc);
+      //  //cg.strokeWeight(2);
+      //  //cg.fill(c, alpha*255);
+      //  //cg.rect(x, y, barWidth, barHeight);
+      //}
       
       dg.fill(c, alpha*255);
       dg.rect(bx, by, bw, bh);
@@ -324,7 +329,7 @@ void draw() {
   }
 
   // increment time
-  elapsedMs += frameMs;
+  //elapsedMs += frameMs;
 
   // check if we should exit
   if (elapsedMs >= totalMs) {

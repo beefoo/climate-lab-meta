@@ -9,7 +9,7 @@ String outputMovieFile = "frames/frames-#####.png";
 int fps = 30;
 
 float elapsedMs = 0;
-float totalMs = 60000;
+float totalMs = 120000;
 float frameMs;
 
 // asia

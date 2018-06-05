@@ -3,11 +3,11 @@
  *   To compile: ffmpeg -framerate 30/1 -i frames/frames-%05d.png -c:v libx264 -r 30 -pix_fmt yuv420p -q:v 1 co2b.mp4
  */
  
-boolean captureFrames = true;
+boolean captureFrames = false;
 String outputMovieFile = "frames/frames-#####.png";
 int fps = 30;
 
-float elapsedMs = 0;
+float elapsedMs = 24000;
 float totalMs = 30000;
 float emissionMsStart = 0;
 float emissionMsEnd = 25000;
@@ -41,6 +41,8 @@ void setup() {
   
   frameMs = (1.0/float(fps)) * 1000;
   year = "";
+  
+  noLoop();
 
 }
 
@@ -67,11 +69,11 @@ void draw() {
   
   ps.run();
   
-  fill(#ffca59);
-  textAlign(CENTER, CENTER);
-  textSize(width / 75.0);
-  text(year, width / 9.0 - width / 18.0, height * (5.0/8.0));
-  text(year, width - width / 9.0 + width / 18.0, height * (5.0/8.0));
+  //fill(#ffca59);
+  //textAlign(CENTER, CENTER);
+  //textSize(width / 75.0);
+  //text(year, width / 9.0 - width / 18.0, height * (5.0/8.0));
+  //text(year, width - width / 9.0 + width / 18.0, height * (5.0/8.0));
   
   //fill(#ffca59);
   //text("Fossil fuel carbon emissions", width / 2.0, height * 0.75 * 0.5 - height * 0.04);

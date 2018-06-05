@@ -16,6 +16,7 @@ float margin = 40;
 
 void setup() {
   size(3686, 692);
+  //size(17280, 3240);
   frameRate(fps);
   smooth();
   noStroke();
@@ -24,6 +25,12 @@ void setup() {
   JSONObject json = loadJSONObject(dataFile);
   jsonFrames = json.getJSONArray("frames");
   jsonFrameCount = jsonFrames.size();
+  
+  circleW = 0.025 * height;
+  margin = 0.058 * height;
+  
+  //currentJsonFrame = jsonFrameCount-1;
+  
 }
 
 void draw() {
